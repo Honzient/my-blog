@@ -61,7 +61,7 @@ const maxWClass = contentWidth === 'wide' ? 'max-w-4xl' : 'max-w-3xl';
                  hover:text-neutral-500 dark:text-neutral-200 dark:hover:text-neutral-400
                  transition-colors duration-200"
         >
-          <svg class="w-5 h-5 text-neutral-400 dark:text-neutral-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-neutral-500 dark:text-neutral-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9"/>
           </svg>
@@ -79,12 +79,12 @@ const maxWClass = contentWidth === 'wide' ? 'max-w-4xl' : 'max-w-3xl';
 
     <footer class={`${maxWClass} mx-auto w-full px-6 pb-12`}>
       <div class="border-t border-neutral-200/60 dark:border-neutral-800 pt-8 flex items-center justify-between">
-        <p class="text-sm text-neutral-400 dark:text-neutral-500">
+        <p class="text-sm text-neutral-500 dark:text-neutral-400">
           &copy; {new Date().getFullYear()}
         </p>
         <button
           onclick="window.scrollTo({top:0,behavior:'smooth'})"
-          class="text-sm text-neutral-300 font-mono hover:text-neutral-500 dark:text-neutral-600 dark:hover:text-neutral-400 transition-colors duration-200 bg-transparent border-none cursor-pointer p-0"
+          class="text-sm text-neutral-400 font-mono hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors duration-200 bg-transparent border-none cursor-pointer p-0"
         >
           {t(locale, 'footer.top')}
         </button>

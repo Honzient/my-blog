@@ -36,9 +36,7 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags || []))].sort();
   locale={locale}
   contentWidth="wide"
 >
-  <!-- Articles — dead center on the page -->
   <div>
-    <!-- Hero -->
     <section class="mb-16">
       <h1 class="text-4xl font-bold tracking-tight text-neutral-900 leading-tight dark:text-neutral-100">
         {t(locale, 'home.greeting')} <span class="text-neutral-500 dark:text-neutral-400 font-medium">{'[Your Name]'}</span>
@@ -49,18 +47,17 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags || []))].sort();
       <div class="mt-12 w-16 h-px bg-neutral-300 dark:bg-neutral-600" />
     </section>
 
-    <!-- Mobile search (below hero, before posts) -->
     <div class="2xl:hidden mb-10">
       <SearchBarInline allTags={allTags} placeholder="Search articles..." locale={locale} />
     </div>
 
-    <h2 class="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-400 dark:text-neutral-500 mb-8">
+    <h2 class="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500 dark:text-neutral-400 mb-8">
       {t(locale, 'home.writing')}
     </h2>
 
     {
       posts.length === 0 ? (
-        <p class="text-neutral-400 dark:text-neutral-500">{t(locale, 'home.empty')}</p>
+        <p class="text-neutral-500 dark:text-neutral-400">{t(locale, 'home.empty')}</p>
       ) : (
         <div id="post-list">
           {posts.map((post) => <PostCard post={post} locale={locale} />)}
@@ -70,7 +67,6 @@ const allTags = [...new Set(posts.flatMap((p) => p.data.tags || []))].sort();
 
   </div>
 
-  <!-- Sidebar — fixed in the right margin, outside centered content flow -->
   <aside class="hidden 2xl:block fixed z-30" style="left: calc(50% + 28rem + 1.5rem); width: 250px; top: 7rem;">
     <SearchBarSidebar allTags={allTags} placeholder="Search..." locale={locale} />
   </aside>

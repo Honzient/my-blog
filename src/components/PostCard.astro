@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { formatDate, toISODate } from '../lib/date';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -27,13 +28,9 @@ const postUrl = locale === 'zh' ? `/posts/${post.id}` : `/en/posts/${post.id}`;
   <div class="block p-6">
     <time
       class="text-xs text-neutral-500 dark:text-neutral-400 font-mono tracking-tight"
-      datetime={publishedAt.toISOString()}
+      datetime={toISODate(publishedAt)}
     >
-      {publishedAt.toLocaleDateString('zh-CN', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })}
+      {formatDate(publishedAt, locale, 'full')}
     </time>
 
     <h2 class="mt-2 text-xl font-semibold text-neutral-900 dark:text-neutral-200 leading-snug
@@ -52,9 +49,9 @@ const postUrl = locale === 'zh' ? `/posts/${post.id}` : `/en/posts/${post.id}`;
         {tags.map((tag) => (
           <a href={locale === 'zh' ? `/tags/${tag}` : `/en/tags/${tag}`}
              class="inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full no-underline
-                    text-neutral-500 dark:text-neutral-400
+                    text-neutral-600 dark:text-neutral-300
                     bg-neutral-100 dark:bg-neutral-700/50
-                    hover:text-neutral-700 dark:hover:text-neutral-300
+                    hover:text-neutral-800 dark:hover:text-neutral-100
                     hover:bg-neutral-200 dark:hover:bg-neutral-600
                     transition-colors duration-150">
             #{tag}

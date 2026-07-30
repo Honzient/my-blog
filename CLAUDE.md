@@ -1,208 +1,51 @@
-# CLAUDE.md — AI System Instructions
+# CLAUDE.md — Universal Development & Design Standards
 
-> **Read this first.** Every AI agent working on this project must read this file before making any changes. It defines the technical and design standards that keep this project coherent.
-
----
-
-## 1. Tech Stack
-
-| Layer | Choice | Version |
-|-------|--------|---------|
-| Framework | [Astro](https://astro.build) | 7.x |
-| Language | TypeScript (strict mode) | 6.x |
-| CSS | [TailwindCSS](https://tailwindcss.com) | 4.x |
-| Typography | `@tailwindcss/typography` (prose) | latest |
-| Code Highlighting | Shiki (Astro built-in) | — |
-| Package Manager | **npm only** | — |
-| Fonts | Inter + Noto Sans SC (Google Fonts) | — |
-
-### Why Astro?
-
-- **Content-first by design.** Blog output is 100% static HTML/CSS with zero client JS by default. Only hydrate interactive islands when truly needed.
-- **Markdown as a first-class citizen.** Content Collections provide type-safe, validated Markdown with frontmatter schema.
-- **File-based routing.** `src/pages/about.astro` → `/about`. Zero config, zero boilerplate.
-- **Islands Architecture.** Framework components (React, Vue, Svelte) can be embedded only where interactivity is required — but think twice before adding them.
-
-### Key Dependencies
-
-| Package | Purpose |
-|---------|---------|
-| `astro` | Static site generator |
-| `@astrojs/check` | TypeScript type checking for `.astro` files |
-| `typescript` | Language type safety |
-| `tailwindcss` | Utility-first CSS framework (v4, CSS-first config) |
-| `@tailwindcss/vite` | TailwindCSS Vite plugin (Astro integration) |
-| `@tailwindcss/typography` | Beautiful Markdown prose styling via `prose` class |
-| `zod` | Schema validation for content collection frontmatter |
+> **Read this first.** This document defines the high-level workflow, design philosophy, and coding standards for this project. It intentionally avoids specific technical implementations or folder structures, focusing instead on overarching principles and project governance.
 
 ---
 
-## 2. Style Guide (Design Philosophy)
+## 1. Mandatory Workflow & Git Protocol (Highest Priority)
 
-### Core Principle: **Minimalist & Elegant**
+As an AI development assistant, you **MUST** strictly follow this continuous integration workflow:
 
-This is a personal blog. Every design decision should answer: *"Does this add calmness, or does it add noise?"*
-
-### Color Palette
-
-- **Base:** Neutral scale (`neutral-50` through `neutral-950`) — pure black, white, and gray.
-- **Accent:** None. No bright brand colors, no gradients. Let the content (text, images) provide color.
-- **Interactions:** Subtle transitions to `neutral-400`/`neutral-500` on hover. Never use saturated colors for hover states.
-- **Backgrounds:** White (`white` / `bg-white`) by default. Light gray (`neutral-50` / `bg-neutral-50`) for subtle card backgrounds if needed.
-
-### Typography
-
-- **Body font:** `Inter` (Latin) + `Noto Sans SC` (CJK fallback), sans-serif stack.
-- **Mono font:** `JetBrains Mono` or `Fira Code` for inline code and code blocks.
-- **Scale:** Use Tailwind's built-in scale (`text-sm`, `text-base`, `text-lg`, `text-xl`, `text-3xl`, `text-4xl`). No custom font sizes.
-- **Line height:** `leading-relaxed` for body text, `leading-tight` or `leading-snug` for headings.
-- **Font weight:** Regular (400) for body, medium (500) for emphasis, semibold (600) for headings, bold (700) sparingly.
-
-### Whitespace
-
-- **Generous padding and margins.** When in doubt, add more space. Visual breathing room is the #1 design tool.
-- Use `py-24`, `mb-20`, `gap-8` over tight spacing. Never crowd elements.
-- Max content width is `max-w-3xl` (48rem / ~768px) for a comfortable reading measure.
-
-### Motion & Transitions
-
-- **Subtle and fast.** `duration-200` is the standard. Never exceed `duration-300`.
-- Use `transition-colors` for color changes, `transition-transform` for hover lifts.
-- Page-load animation: `animate-fade-in` (opacity + translateY 8px, 0.5s).
-- Hover: `translate-x-1` for horizontal nudges, `-translate-y-[1px]` for lifts. Keep it barely perceptible.
-
-### Anti-Patterns (DO NOT USE)
-
-- ❌ Bright/neon colors or saturated accent colors
-- ❌ Heavy box shadows (`shadow-lg`, `shadow-xl`)
-- ❌ Rounded corners larger than `rounded-lg`
-- ❌ Gradient backgrounds or text
-- ❌ Bouncy or long animations (>300ms)
-- ❌ Borders thicker than 1px
-- ❌ Cards with prominent backgrounds (keep them transparent or `bg-neutral-50`)
-
-### Do
-
-- ✅ Subtle 1px borders (`border-neutral-100`, `border-neutral-200`)
-- ✅ `rounded-lg` for images and code blocks
-- ✅ `rounded-full` for small tags/chips
-- ✅ Fade-in page transitions
-- ✅ Generous whitespace between sections
-- ✅ Clean monochrome palette with high contrast for readability
+- **GitHub Push Requirement:** After completing any significant update (e.g., bug fix, component refactoring, UI optimization, or new feature rollout), you **must** proactively prompt and guide the user to push the code to the Git/GitHub repository.
+- **Commit Message Standard:** Generate clear, semantic commit messages following the Conventional Commits format (`<type>: <description>`). 
+  - *Examples:* `feat: 统一全站阅读排版与层级体系`, `fix: 修复非语义化标签嵌套导致的渲染异常`
+- **Documentation Synchronization:** If a change modifies core functionalities, introduces new dependencies, or alters the project's setup, **immediately** update `README.md` and related architectural documentation.
+- **Completion Prompt:** At the end of every significant task execution, you must explicitly conclude with:
+  > **"代码修改已完成。请检查并在测试无误后，让我为您生成 Git Commit 信息并引导推送到 GitHub。"**
 
 ---
 
-## 3. Project Structure
+## 2. Design Philosophy & UX Principles
 
-```
-my-blog/
-├── astro.config.mjs          # Astro + Tailwind + Shiki config
-├── tsconfig.json             # TypeScript strict config
-├── package.json              # Dependencies & scripts (npm only)
-├── .env.example              # Environment variable template
-├── .gitignore
-├── CLAUDE.md                 # ← This file
-│
-└── src/
-    ├── styles/
-    │   └── global.css        # Tailwind imports, @theme tokens, base styles
-    │
-    ├── content.config.ts     # Content collection schemas + loaders
-    ├── content/
-    │   └── posts/            # ← All Markdown blog posts live here
-    │       └── *.md
-    │
-    ├── layouts/
-    │   └── BaseLayout.astro  # Root HTML shell (fonts, meta, header, footer)
-    │
-    ├── components/
-    │   ├── PostCard.astro       # Article preview card (used on homepage)
-    │   ├── FloatingPanel.astro  # Bottom-right quick-actions panel (idle fade)
-    │   └── *.astro              # Add reusable UI components here
-    │
-    └── pages/
-        ├── index.astro       # Homepage: intro + post list
-        └── posts/
-            └── [...slug].astro  # Dynamic post detail page
-```
-
-### Key rules
-
-- **Blog posts** go in `src/content/posts/` as `.md` (or `.mdx`) files.
-- **Reusable UI** goes in `src/components/`.
-- **Pages** are in `src/pages/` — Astro file-based routing.
-- **Layouts** wrap pages; they go in `src/layouts/`.
-- **Global styles** belong in `src/styles/global.css`.
+- **Minimalism & Signal-to-Noise Ratio:** Prioritize the reading and content experience. Every UI element must justify its existence. Remove unnecessary borders, heavy shadows, and redundant decorative elements. Rely on typography and generous whitespace (breathing room) to separate sections.
+- **Accessibility & Contrast (WCAG):** Never sacrifice readability for aesthetics. Ensure all secondary texts, meta-information, and disabled states maintain sufficient contrast against their background (especially in low-contrast "paper-like" or warm themes).
+- **Visual Hierarchy:** Establish and strictly adhere to a consistent typographic scale. Headings (H1, H2, H3) must be structurally distinct from body text through size, weight, and substantial top/bottom margins.
+- **Micro-Interactions:** All interactive elements (buttons, links, cards) must have subtle, predictable, and logical feedback states (hover, active, focus). Transitions should be smooth and fast.
 
 ---
 
-## 4. Dependencies & Environment
+## 3. Localization & Uniformity (Strict Rule)
 
-### Package Manager
-
-- **Use npm only.** Do NOT run `yarn`, `pnpm`, or `bun`.
-- Install: `npm install <package>`
-- Run scripts: `npm run dev`, `npm run build`, `npm run preview`
-
-### Adding a New Dependency
-
-When adding a third-party package to this project:
-
-1. Install it: `npm install <package>`
-2. **Immediately** update this `CLAUDE.md` — add the package to the **Key Dependencies** table in Section 1 with a one-line description of its purpose.
-3. If it requires environment variables, add them to `.env.example`.
-
-### Removing a Dependency
-
-When a package is no longer used:
-
-1. Uninstall it: `npm uninstall <package>`
-2. Remove its entry from the **Key Dependencies** table in this file.
-3. Remove its environment variables from `.env.example`.
-
-### Environment Variables
-
-- All env vars must be documented in `.env.example` with comments.
-- `.env` must remain in `.gitignore` — never commit real secrets.
-- Reference env vars in Astro via `import.meta.env.VITE_*` for client-side, or process.env for server-side (build time).
+- **Unified Language:** The primary language of the user interface is Simplified Chinese. Never mix English terminologies in user-facing elements unless it is a globally recognized technical term.
+- **Data Formatting:** Implement a single source of truth for date, time, and numerical formatting (e.g., strictly use `YYYY年MM月DD日` or `YYYY-MM-DD`). Prevent format fragmentation across different pages or modules.
+- **Consistent Terminology:** Ensure functional copy (e.g., "阅读时间", "返回", "搜索", "标签") maintains absolute consistency across the entire application.
 
 ---
 
-## 5. Command Reference
+## 4. Code Quality & Architectural Norms
 
-| Command | Purpose |
-|---------|---------|
-| `npm run dev` | Start dev server (hot reload at localhost:4321) |
-| `npm run build` | Type-check + production build |
-| `npm run preview` | Preview production build locally |
-| `npm run astro` | Run arbitrary Astro CLI commands |
+- **Semantic HTML & Standards Compliance:** Output strictly valid and semantic DOM structures. **Zero tolerance for HTML anti-patterns** (e.g., absolutely no nested `<a>` tags, no interactive elements inside other interactive elements). Use native semantic tags properly for SEO and screen-reader compatibility.
+- **Component Decoupling:** Design UI modules (like Table of Contents, Code Blocks, Article Cards) as independent, cohesive components. Avoid hardcoding parent-specific layout constraints (like absolute widths or fixed margins) inside child components.
+- **Maintainability over Cleverness:** Write readable, predictable code. Leave clear, concise comments for complex logic. Avoid "magic numbers" in styling or logic; extract them into configuration files, CSS variables, or design tokens.
+- **Dependency Hygiene:** Do not introduce heavy or complex third-party libraries for trivial features that can be efficiently solved with native Web APIs (e.g., prefer native `IntersectionObserver` over large scrolling libraries).
 
 ---
 
-## 6. Content Authoring
+## 5. Proactive Assistance
 
-### Blog Post Frontmatter
-
-Every `.md` file in `src/content/posts/` must have:
-
-```yaml
----
-title: "Post Title"
-description: "A short summary for previews and SEO."
-publishedAt: 2026-07-29
-updatedAt: 2026-07-29   # optional
-tags:                   # optional
-  - tech
-  - design
-draft: false            # true = hidden from production
----
-```
-
-### Images & Assets
-
-- Place images in `src/content/posts/` alongside the `.md` file, or in `public/` for global assets.
-- Reference them with relative paths in Markdown: `![alt](./image.png)`.
+- Always point out potential UX friction, accessibility violations, or code smells when you spot them in the user's provided code, even if not explicitly asked. Propose high-level, standard-compliant solutions.
 
 ---
-
-*This document evolves with the project. When design decisions change, update it. When dependencies are added or removed, update it. When you learn something about the codebase that surprised you, add it.*
+*This document acts as the supreme constitution for all AI interactions within this project.*

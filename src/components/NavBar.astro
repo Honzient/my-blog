@@ -25,7 +25,7 @@ const linkCls = (active: boolean) =>
     'nav-link relative pb-1 text-sm font-medium no-underline transition-colors duration-200',
     active
       ? 'active text-neutral-900 dark:text-neutral-100'
-      : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300',
+      : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200',
   ].join(' ');
 ---
 
@@ -42,7 +42,7 @@ const linkCls = (active: boolean) =>
         'nav-link relative pb-1 inline-flex items-center gap-1 text-sm font-medium transition-colors duration-200 cursor-default select-none',
         isWriting
           ? 'active text-neutral-900 dark:text-neutral-100'
-          : 'text-neutral-400 dark:text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-300',
+          : 'text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200',
       ]}
     >
       {t(locale, 'nav.writing')}
@@ -102,7 +102,7 @@ const linkCls = (active: boolean) =>
   <div class="relative" id="subscribe-group">
     <span
       id="subscribe-trigger"
-      class="nav-link relative pb-1 inline-flex items-center gap-1 text-sm font-medium transition-colors duration-200 cursor-pointer select-none text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+      class="nav-link relative pb-1 inline-flex items-center gap-1 text-sm font-medium transition-colors duration-200 cursor-pointer select-none text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
     >
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -114,7 +114,7 @@ const linkCls = (active: boolean) =>
       class="absolute top-full right-0 pt-2 invisible opacity-0 transition-all duration-200 z-50">
       <div class="bg-white/90 dark:bg-neutral-800/80 backdrop-blur-xl border border-white/20 dark:border-neutral-700/30 rounded-xl shadow-[0_0_0_1px_rgba(0,0,0,0.03),0_8px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_8px_24px_rgba(0,0,0,0.35)] p-4 min-w-[260px]">
         <p class="text-sm font-medium text-neutral-800 dark:text-neutral-200 mb-1">{t(locale, 'newsletter.title')}</p>
-        <p class="text-xs text-neutral-500 dark:text-neutral-400 mb-3">{t(locale, 'newsletter.text')}</p>
+        <p class="text-xs text-neutral-600 dark:text-neutral-400 mb-3">{t(locale, 'newsletter.text')}</p>
         <form class="flex gap-2" onsubmit="(function(e){e.preventDefault();var t=e.target.querySelector('input');if(t&&t.value){alert('订阅功能即将上线！');t.value='';}})(event)">
           <input type="email" placeholder={t(locale, 'newsletter.placeholder')}
             class="flex-1 px-3 py-1.5 text-xs rounded-lg bg-neutral-50 dark:bg-neutral-700/40 border border-neutral-200/60 dark:border-neutral-600/40 text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"/>
@@ -133,7 +133,7 @@ const linkCls = (active: boolean) =>
   <!-- Theme toggle -->
   <button
     id="theme-toggle"
-    class="p-1 text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-200 rounded transition-colors duration-200 cursor-pointer bg-transparent border-none"
+    class="p-1 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 rounded transition-colors duration-200 cursor-pointer bg-transparent border-none"
     aria-label={t(locale, 'theme.light')}
     title={t(locale, 'theme.light')}
   >
@@ -149,7 +149,7 @@ const linkCls = (active: boolean) =>
   <!-- Language toggle -->
   <a
     href={altPath}
-    class="text-xs font-mono font-medium text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-200 transition-colors duration-200 no-underline"
+    class="text-xs font-mono font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors duration-200 no-underline"
     title={`Switch to ${altLocale === 'zh' ? '中文' : 'English'}`}
   >
     {altLocale === 'en' ? 'EN' : '中文'}

@@ -14,15 +14,23 @@ export function initSearch() {
   const activeTags = new Set();
   let activeYear = '';
 
+  // Detect locale from the <html lang> attribute
+  const htmlLang = document.documentElement.lang || 'zh';
+  const t = {
+    filters: htmlLang.startsWith('en') ? 'Filters' : '筛选',
+    filtersOpen: htmlLang.startsWith('en') ? 'Filters ▲' : '筛选 ▲',
+    noResults: htmlLang.startsWith('en') ? 'No posts found.' : '未找到匹配文章。',
+    postsFound: (n) => htmlLang.startsWith('en') ? `${n} post(s)` : `${n} 篇文章`,
+  };
+
   // Populate year chips from post data
   const years = [...new Set(posts.map((p) => p.publishedAt.slice(0, 4)))].sort().reverse();
   const yearContainer = document.getElementById('year-filters');
   if (yearContainer) {
-    // Keep the "All" button, append year buttons
     years.forEach((y) => {
       const btn = document.createElement('button');
       btn.dataset.year = y;
-      btn.className = 'year-chip text-[11px] font-medium px-2 py-0.5 rounded-full text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700/50 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-colors duration-150 cursor-pointer border-none';
+      btn.className = 'year-chip text-[11px] font-medium px-2 py-0.5 rounded-full text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-700/50 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-colors duration-150 cursor-pointer border-none';
       btn.textContent = y;
       yearContainer.appendChild(btn);
     });
@@ -33,7 +41,7 @@ export function initSearch() {
   filterToggle?.addEventListener('click', () => {
     filterOpen = !filterOpen;
     filterPanel?.classList.toggle('hidden', !filterOpen);
-    if (filterLabel) filterLabel.textContent = filterOpen ? '筛选 ▲' : '筛选';
+    if (filterLabel) filterLabel.textContent = filterOpen ? t.filtersOpen : t.filters;
   });
 
   // Tag chips
@@ -97,8 +105,8 @@ export function initSearch() {
       resultsInfo.classList.toggle('hidden', !hasFilters);
       if (hasFilters) {
         resultsInfo.textContent = visible === 0
-          ? '未找到匹配文章。'
-          : `${visible} 篇文章`;
+          ? t.noResults
+          : t.postsFound(visible);
       }
     }
   }

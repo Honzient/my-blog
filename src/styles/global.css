@@ -45,6 +45,207 @@
   text-decoration-color: var(--color-neutral-600);
 }
 
+/* ==============================================
+   Module 3 — Typography: heading hierarchy + spacing
+   ============================================== */
+
+/* H2: clearly differentiated from body, generous top margin */
+.prose h2 {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  margin-top: 2.5rem;   /* mt-10 */
+  margin-bottom: 1rem;  /* mb-4  */
+  letter-spacing: -0.01em;
+}
+
+/* H3: secondary anchor points, less dominant than H2 */
+.prose h3 {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin-top: 2rem;     /* mt-8 */
+  margin-bottom: 0.75rem; /* mb-3 */
+  letter-spacing: -0.005em;
+}
+
+/* H4: subtle divider role — small-caps feel */
+.prose h4 {
+  font-size: var(--text-base);
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+/* Paragraphs: generous vertical rhythm */
+.prose p {
+  margin-bottom: 1.5rem; /* mb-6 */
+  line-height: 1.75;     /* leading-relaxed */
+}
+
+/* Lists: breathing room between items */
+.prose li {
+  margin-bottom: 0.375rem;
+}
+
+/* Blockquotes: refined spacing */
+.prose blockquote {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ==============================================
+   Module 4 — Code blocks: refined styling
+   ============================================== */
+
+/* Base code block wrapper */
+.prose pre,
+.prose [data-code-wrapper] pre {
+  padding: 2.5rem 1rem 1rem 1rem; /* top padding for header bar */
+  border-radius: var(--radius-xl);
+  border: 1px solid rgb(229 229 229 / 0.6);
+  box-shadow: none;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+html.dark .prose pre,
+html.dark .prose [data-code-wrapper] pre {
+  border-color: rgb(64 64 64 / 0.5);
+}
+
+/* Inline code — subtle differentiation */
+.prose :not(pre) > code {
+  font-size: 0.875em;
+  padding: 0.15em 0.4em;
+  border-radius: 0.375rem;
+  background: rgb(245 245 245 / 0.8);
+  border: 1px solid rgb(229 229 229 / 0.6);
+  font-weight: 500;
+}
+
+html.dark .prose :not(pre) > code {
+  background: rgb(38 38 38 / 0.6);
+  border-color: rgb(64 64 64 / 0.5);
+}
+
+/* Code block header bar (injected by CodeCopy.astro) */
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 2rem;
+  padding: 0 0.75rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top-left-radius: var(--radius-xl);
+  border-top-right-radius: var(--radius-xl);
+  background: rgb(245 245 245 / 0.7);
+  border-bottom: 1px solid rgb(229 229 229 / 0.5);
+  z-index: 5;
+}
+
+html.dark .code-block-header {
+  background: rgb(38 38 38 / 0.7);
+  border-bottom-color: rgb(64 64 64 / 0.5);
+}
+
+.code-block-header .code-lang {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-neutral-500);
+}
+
+html.dark .code-block-header .code-lang {
+  color: var(--color-neutral-400);
+}
+
+.code-block-header .code-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  color: var(--color-neutral-400);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.375rem;
+  border-radius: 0.375rem;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.code-block-header .code-copy-btn:hover {
+  color: var(--color-neutral-700);
+  background: rgb(0 0 0 / 0.04);
+}
+
+html.dark .code-block-header .code-copy-btn:hover {
+  color: var(--color-neutral-200);
+  background: rgb(255 255 255 / 0.06);
+}
+
+/* ==============================================
+   Module 5 — Table of Contents: border-l style + ScrollSpy
+   ============================================== */
+
+.toc-nav {
+  border-left: 1px solid var(--color-neutral-200);
+  padding-left: 1rem;
+}
+
+html.dark .toc-nav {
+  border-left-color: var(--color-neutral-700);
+}
+
+.toc-nav a {
+  display: block;
+  font-size: 0.875rem;    /* text-sm */
+  line-height: 1.6;
+  padding: 0.25rem 0;     /* py-1 */
+  color: var(--color-neutral-500);
+  text-decoration: none;
+  transition: color 0.15s ease, font-weight 0.15s ease;
+  border-left: 2px solid transparent;
+  margin-left: -1rem;      /* align with the nav's border-l */
+  padding-left: 0.75rem;   /* content inset from the active bar */
+}
+
+html.dark .toc-nav a {
+  color: var(--color-neutral-400);
+}
+
+.toc-nav a:hover {
+  color: var(--color-neutral-700);
+}
+
+html.dark .toc-nav a:hover {
+  color: var(--color-neutral-200);
+}
+
+/* H3 indent */
+.toc-nav a[data-depth="3"] {
+  padding-left: 1.5rem;
+  font-size: 0.8125rem;
+}
+
+/* Active TOC item */
+.toc-nav a.toc-active {
+  color: var(--color-neutral-900);
+  font-weight: 600;
+  border-left-color: var(--color-neutral-900);
+}
+
+html.dark .toc-nav a.toc-active {
+  color: var(--color-neutral-100);
+  border-left-color: var(--color-neutral-300);
+}
+
 /* ---- Global base styles ---- */
 @layer base {
   html {

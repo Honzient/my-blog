@@ -17,19 +17,17 @@ const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 ---
 
 {items.length > 0 && (
-  <nav class="rounded-xl bg-white/70 dark:bg-neutral-800/50 backdrop-blur-xl border border-white/20 dark:border-neutral-700/30 p-4 text-sm">
-    <p class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 mb-3">
+  <nav class="toc-nav">
+    <p class="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-3 pl-[0.75rem]">
       {t(locale, 'toc.heading')}
     </p>
-    <ul class="space-y-1.5">
+    <ul class="space-y-0">
       {items.map((h) => (
         <li>
           <a
             href={`#${h.slug}`}
-            class:list={[
-              'block text-neutral-500 dark:text-neutral-400 no-underline hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors duration-150',
-              h.depth === 3 ? 'pl-3 text-xs' : 'text-[13px]',
-            ]}
+            data-depth={h.depth}
+            data-toc-link
           >
             {h.text}
           </a>
@@ -38,3 +36,44 @@ const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     </ul>
   </nav>
 )}
+
+<script>
+  // ScrollSpy — IntersectionObserver-based TOC active-state tracking
+  (function () {
+    const links = document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]');
+    if (links.length === 0) return;
+
+    const headings = Array.from(links)
+      .map((a) => document.getElementById(a.getAttribute('href')?.replace('#', '') ?? ''))
+      .filter(Boolean) as HTMLElement[];
+
+    if (headings.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find the first heading that is currently visible (top-most in viewport)
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visible.length > 0) {
+          const id = visible[0].target.id;
+          links.forEach((a) => {
+            const href = a.getAttribute('href')?.replace('#', '') ?? '';
+            if (href === id) {
+              a.classList.add('toc-active');
+            } else {
+              a.classList.remove('toc-active');
+            }
+          });
+        }
+      },
+      {
+        rootMargin: '-80px 0px -70% 0px',
+        threshold: 0,
+      },
+    );
+
+    headings.forEach((h) => observer.observe(h));
+  })();
+</script>
