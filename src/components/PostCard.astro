@@ -1,0 +1,66 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  locale: 'zh' | 'en';
+}
+
+const { post, locale } = Astro.props;
+const { title, description, publishedAt, tags } = post.data;
+const postUrl = locale === 'zh' ? `/posts/${post.id}` : `/en/posts/${post.id}`;
+---
+
+<article
+  data-post-id={post.id}
+  class="post-card group mb-5 rounded-xl relative
+         bg-white/70 dark:bg-neutral-800/60 backdrop-blur-xl
+         border border-white/20 dark:border-neutral-700/30
+         shadow-[0_0_0_1px_rgba(0,0,0,0.02),0_2px_8px_rgba(0,0,0,0.04)]
+         dark:shadow-[0_0_0_1px_rgba(255,255,255,0.01),0_2px_8px_rgba(0,0,0,0.2)]
+         hover:shadow-[0_0_0_1px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.08)]
+         dark:hover:shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_8px_24px_rgba(0,0,0,0.35)]
+         hover:bg-white/85 dark:hover:bg-neutral-800/75
+         hover:border-neutral-300/60 dark:hover:border-neutral-600/60
+         transition-all duration-300 cursor-pointer"
+>
+  <div class="block p-6">
+    <time
+      class="text-xs text-neutral-500 dark:text-neutral-400 font-mono tracking-tight"
+      datetime={publishedAt.toISOString()}
+    >
+      {publishedAt.toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })}
+    </time>
+
+    <h2 class="mt-2 text-xl font-semibold text-neutral-900 dark:text-neutral-200 leading-snug
+               group-hover:text-neutral-600 dark:group-hover:text-neutral-300 transition-colors duration-200">
+      <a href={postUrl} class="before:absolute before:inset-0 no-underline text-inherit">
+        {title}
+      </a>
+    </h2>
+
+    <p class="mt-2 text-neutral-600 dark:text-neutral-400 leading-relaxed line-clamp-2">
+      {description}
+    </p>
+
+    {tags && tags.length > 0 && (
+      <div class="flex flex-wrap gap-1.5 mt-4 relative z-10">
+        {tags.map((tag) => (
+          <a href={locale === 'zh' ? `/tags/${tag}` : `/en/tags/${tag}`}
+             class="inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full no-underline
+                    text-neutral-500 dark:text-neutral-400
+                    bg-neutral-100 dark:bg-neutral-700/50
+                    hover:text-neutral-700 dark:hover:text-neutral-300
+                    hover:bg-neutral-200 dark:hover:bg-neutral-600
+                    transition-colors duration-150">
+            #{tag}
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</article>

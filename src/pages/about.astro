@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { t, type Locale } from '../i18n/ui';
+
+const locale: Locale = 'zh';
+---
+
+<BaseLayout
+  title={`${t(locale, 'about.title')} — ${t(locale, 'site.title')}`}
+  description={t(locale, 'site.description')}
+  currentPath="/about"
+  locale={locale}
+  contentWidth="wide"
+>
+  <section class="animate-fade-in-up">
+    <h1 class="text-3xl font-bold tracking-tight text-neutral-900 leading-tight dark:text-neutral-100">
+      {t(locale, 'about.title')}
+    </h1>
+
+    <div class="mt-10 prose prose-neutral max-w-none
+                prose-p:leading-relaxed prose-p:text-neutral-600 dark:prose-p:text-neutral-400
+                prose-a:font-medium">
+      <p set:html={t(locale, 'about.intro')} />
+
+      <h2 class="dark:text-neutral-200">{t(locale, 'about.heading_blog')}</h2>
+      <p>{t(locale, 'about.blog_text')}</p>
+
+      <h2 class="dark:text-neutral-200">{t(locale, 'about.heading_colophon')}</h2>
+      <p set:html={t(locale, 'about.colophon_text')} />
+
+      <h2 class="dark:text-neutral-200">{t(locale, 'about.heading_contact')}</h2>
+      <p set:html={t(locale, 'about.contact_text')} />
+    </div>
+  </section>
+</BaseLayout>

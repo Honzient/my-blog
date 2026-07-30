@@ -1,0 +1,94 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ReadingProgress from '../../../components/ReadingProgress.astro';
+import TableOfContents from '../../../components/TableOfContents.astro';
+import CopyLinkButton from '../../../components/CopyLinkButton.astro';
+import CodeCopy from '../../../components/CodeCopy.astro';
+import ImageLightbox from '../../../components/ImageLightbox.astro';
+import { t, type Locale } from '../../../i18n/ui';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const { title, description, publishedAt, tags } = post.data;
+const { Content, headings = [] } = await render(post);
+
+const locale: Locale = 'en';
+const homePath = '/en/';
+
+const rawFiles = import.meta.glob('../../../content/posts/*.md', { query: '?raw', eager: true });
+const raw: string = (rawFiles[`../../../content/posts/${post.id}.md`] as any)?.default || '';
+const words = raw.replace(/^---[\s\S]*?---\n?/, '').split(/\s+/).length;
+const readMin = Math.max(1, Math.ceil(words / 200));
+---
+
+<BaseLayout title={`${title} — ${t(locale, 'site.title')}`} description={description} currentPath={Astro.url.pathname} locale={locale}>
+  <ReadingProgress />
+
+  <nav class="mb-10">
+    <a href={homePath} class="inline-flex items-center gap-1.5 text-sm text-neutral-400 no-underline hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors duration-200 hover:-translate-x-0.5 transition-transform">
+      <span class="text-xs">&larr;</span><span>{t(locale, 'post.back')}</span>
+    </a>
+  </nav>
+
+  <article>
+    <header class="mb-14">
+      <div class="flex items-center gap-3 text-xs text-neutral-400 dark:text-neutral-500 font-mono tracking-tight mb-3">
+        <time datetime={publishedAt.toISOString()}>
+          {publishedAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+        <span class="text-neutral-300 dark:text-neutral-600">·</span>
+        <span>{readMin} {t(locale, 'readtime.min')}</span>
+      </div>
+
+      <div class="flex items-start gap-1">
+        <h1 class="text-3xl font-bold tracking-tight text-neutral-900 leading-tight dark:text-neutral-100">
+          {title}
+        </h1>
+        <CopyLinkButton locale={locale} />
+      </div>
+
+      {tags && tags.length > 0 && (
+        <div class="mt-5 flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <a href={`/en/tags/${tag}`} class="inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full no-underline text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700/50 hover:text-neutral-700 dark:hover:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-colors duration-150">
+              #{tag}
+            </a>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <div class="prose prose-neutral max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-p:leading-relaxed prose-a:font-medium prose-pre:rounded-xl prose-pre:shadow-sm prose-blockquote:font-normal prose-blockquote:not-italic prose-blockquote:border-l-2 prose-img:rounded-xl prose-li:marker:text-neutral-300 dark:prose-li:marker:text-neutral-600">
+      <Content />
+    </div>
+  </article>
+
+  <div class="mt-20 mb-12 h-px bg-gradient-to-r from-transparent via-neutral-300/60 to-transparent dark:via-neutral-700" />
+
+  <nav class="mb-12">
+    <a href={homePath} class="inline-flex items-center gap-1.5 text-sm text-neutral-400 no-underline hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors duration-200 hover:-translate-x-0.5 transition-transform">
+      <span class="text-xs">&larr;</span><span>{t(locale, 'post.back_home')}</span>
+    </a>
+  </nav>
+
+  <CodeCopy />
+  <ImageLightbox />
+</BaseLayout>
+
+{headings.length > 1 && (
+  <aside class="hidden 2xl:block fixed z-30" style="left: calc(50% + 24rem + 1.25rem); width: 200px; top: 7rem; max-height: calc(100vh - 8rem); overflow-y: auto;">
+    <TableOfContents headings={headings} locale={locale} />
+  </aside>
+)}

@@ -1,0 +1,165 @@
+@import 'tailwindcss';
+
+/* Switch dark: variant from media-query to class-based.
+   This makes all dark:bg-*, dark:text-*, etc. respond to the
+   .dark class we toggle via JS — not just the OS preference. */
+@variant dark (&:where(.dark, .dark *));
+
+/* ==============================================
+   Design Tokens — Refined Minimalism
+   ============================================== */
+
+@theme {
+  --font-sans: 'Inter', 'Noto Sans SC', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --color-page: #faf7f2;
+  --color-page-dark: #1c1c1e;
+}
+
+/* ---- Tailwind Typography overrides (light mode) ---- */
+@utility prose {
+  --tw-prose-body: var(--color-neutral-700);
+  --tw-prose-headings: var(--color-neutral-900);
+  --tw-prose-links: var(--color-neutral-900);
+  --tw-prose-bold: var(--color-neutral-900);
+  --tw-prose-counters: var(--color-neutral-400);
+  --tw-prose-bullets: var(--color-neutral-300);
+  --tw-prose-hr: var(--color-neutral-200);
+  --tw-prose-quotes: var(--color-neutral-600);
+  --tw-prose-quote-borders: var(--color-neutral-300);
+  --tw-prose-captions: var(--color-neutral-500);
+  --tw-prose-code: var(--color-neutral-800);
+  --tw-prose-pre-code: var(--color-neutral-200);
+  --tw-prose-pre-bg: var(--color-neutral-900);
+  --tw-prose-th-borders: var(--color-neutral-300);
+  --tw-prose-td-borders: var(--color-neutral-200);
+}
+
+/* ---- Refined prose link styling ---- */
+.prose a {
+  text-decoration-color: var(--color-neutral-300);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+}
+.prose a:hover {
+  text-decoration-color: var(--color-neutral-600);
+}
+
+/* ---- Global base styles ---- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-page text-neutral-800 font-sans leading-relaxed;
+  }
+
+  /* Dark mode body */
+  html.dark body {
+    @apply bg-page-dark text-neutral-300;
+  }
+
+  /* Headings — prevent typographic orphans */
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: pretty;
+  }
+
+  /* Selection — crisp inverted highlight */
+  ::selection {
+    @apply bg-neutral-900 text-white;
+  }
+  html.dark ::selection {
+    @apply bg-neutral-200 text-neutral-900;
+  }
+
+  /* Subtle focus ring for keyboard navigation */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-neutral-300;
+    outline-style: solid;
+  }
+  html.dark :focus-visible {
+    @apply outline-neutral-600;
+  }
+}
+
+/* ---- Dark mode prose overrides ---- */
+html.dark .prose {
+  --tw-prose-body: var(--color-neutral-300);
+  --tw-prose-headings: var(--color-neutral-100);
+  --tw-prose-links: var(--color-neutral-200);
+  --tw-prose-bold: var(--color-neutral-100);
+  --tw-prose-counters: var(--color-neutral-500);
+  --tw-prose-bullets: var(--color-neutral-600);
+  --tw-prose-hr: var(--color-neutral-700);
+  --tw-prose-quotes: var(--color-neutral-400);
+  --tw-prose-quote-borders: var(--color-neutral-600);
+  --tw-prose-captions: var(--color-neutral-400);
+  --tw-prose-code: var(--color-neutral-200);
+  --tw-prose-pre-code: var(--color-neutral-200);
+  --tw-prose-pre-bg: #161618;
+  --tw-prose-th-borders: var(--color-neutral-600);
+  --tw-prose-td-borders: var(--color-neutral-700);
+}
+html.dark .prose a {
+  text-decoration-color: var(--color-neutral-500);
+}
+html.dark .prose a:hover {
+  text-decoration-color: var(--color-neutral-300);
+}
+
+/* ---- Animations ---- */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@utility animate-fade-in {
+  animation: fade-in 0.6s ease-out both;
+}
+
+@utility animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out both;
+}
+
+/* ---- Premium link underline (use with @apply on specific links) ---- */
+@utility link-underline {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0% 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.3s ease;
+}
+@utility link-underline-hover {
+  background-size: 100% 1px;
+}
+
+/* ---- Nav link underline animation (magazine style) ---- */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: calc(100% - 1rem);
+  height: 1.5px;
+  background-color: currentColor;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 0.25s ease;
+  border-radius: 1px;
+}
+.nav-link:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+.nav-link.active::after {
+  transform: translateX(-50%) scaleX(1);
+}

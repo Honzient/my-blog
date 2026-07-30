@@ -1,0 +1,12 @@
+<!-- Fixed progress bar at the very top of the viewport. Driven by a scroll listener. -->
+<div id="progress-bar" class="fixed top-0 left-0 h-[2px] bg-neutral-900 dark:bg-neutral-200 z-[60] transition-[width] duration-75" style="width:0%"></div>
+
+<script>
+  const bar = document.getElementById('progress-bar');
+  if (bar) {
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = h > 0 ? `${Math.min(100, (window.scrollY / h) * 100)}%` : '0%';
+    }, { passive: true });
+  }
+</script>
