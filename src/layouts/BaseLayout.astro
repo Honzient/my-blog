@@ -10,10 +10,23 @@ export interface Props {
   currentPath?: string;
   locale?: Locale;
   contentWidth?: 'narrow' | 'wide';
+  jsonLd?: Record<string, unknown>;
 }
 
-const { title, description, currentPath, locale = 'zh', contentWidth = 'narrow' } = Astro.props;
+const { title, description, currentPath, locale = 'zh', contentWidth = 'narrow', jsonLd } = Astro.props;
 const maxWClass = contentWidth === 'wide' ? 'max-w-4xl' : 'max-w-3xl';
+
+// Canonical + hreflang — computed from the current path for either locale.
+const zhPath = currentPath?.startsWith('/en')
+  ? (currentPath.slice(3) || '/')
+  : (currentPath ?? '/');
+const enPath = currentPath
+  ? (zhPath === '/' ? '/en/' : `/en${zhPath}`)
+  : undefined;
+const canonicalUrl = new URL(zhPath, SITE.url);
+const enUrl = enPath ? new URL(enPath, SITE.url) : undefined;
+const isArticle = currentPath?.startsWith('/posts') || currentPath?.startsWith('/en/posts');
+const pageDescription = description ?? SITE.description;
 ---
 
 <!DOCTYPE html>
@@ -21,15 +34,32 @@ const maxWClass = contentWidth === 'wide' ? 'max-w-4xl' : 'max-w-3xl';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description ?? SITE.description} />
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={description ?? SITE.description} />
-    <meta property="og:type" content={currentPath?.startsWith('/posts') ? 'article' : 'website'} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content={isArticle ? 'article' : 'website'} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:locale" content={locale === 'zh' ? 'zh_CN' : 'en_US'} />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description ?? SITE.description} />
+    <meta name="twitter:description" content={pageDescription} />
+
+    <!-- Alternate language versions -->
+    <link rel="alternate" hreflang="zh" href={canonicalUrl} />
+    {enUrl && <link rel="alternate" hreflang="en" href={enUrl} />}
+    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+
     <title>{title}</title>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#faf7f2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)" />
+
+    {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -49,6 +79,13 @@ const maxWClass = contentWidth === 'wide' ? 'max-w-4xl' : 'max-w-3xl';
   </head>
 
   <body class="min-h-screen flex flex-col">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[80] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-neutral-900 focus:text-white focus:no-underline"
+    >
+      {t(locale, 'a11y.skip')}
+    </a>
+
     <!-- Gradient top accent — full width -->
     <div class="fixed top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-600 z-50" />
 
@@ -61,7 +98,7 @@ const maxWClass = contentWidth === 'wide' ? 'max-w-4xl' : 'max-w-3xl';
                  hover:text-neutral-500 dark:text-neutral-200 dark:hover:text-neutral-400
                  transition-colors duration-200"
         >
-          <svg class="w-5 h-5 text-neutral-500 dark:text-neutral-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-neutral-600 dark:text-neutral-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9"/>
           </svg>
@@ -73,21 +110,15 @@ const maxWClass = contentWidth === 'wide' ? 'max-w-4xl' : 'max-w-3xl';
       <div class="h-px bg-gradient-to-r from-transparent via-neutral-200/60 to-transparent dark:via-neutral-800"></div>
     </header>
 
-    <main class={`flex-1 ${maxWClass} mx-auto w-full px-6 pb-24 animate-fade-in`}>
+    <main id="main-content" class={`flex-1 ${maxWClass} mx-auto w-full px-6 pb-24 animate-fade-in`}>
       <slot />
     </main>
 
     <footer class={`${maxWClass} mx-auto w-full px-6 pb-12`}>
       <div class="border-t border-neutral-200/60 dark:border-neutral-800 pt-8 flex items-center justify-between">
-        <p class="text-sm text-neutral-500 dark:text-neutral-400">
-          &copy; {new Date().getFullYear()}
+        <p class="text-sm text-neutral-600 dark:text-neutral-500">
+          &copy; {new Date().getFullYear()} {SITE.title}
         </p>
-        <button
-          onclick="window.scrollTo({top:0,behavior:'smooth'})"
-          class="text-sm text-neutral-400 font-mono hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors duration-200 bg-transparent border-none cursor-pointer p-0"
-        >
-          {t(locale, 'footer.top')}
-        </button>
       </div>
     </footer>
 

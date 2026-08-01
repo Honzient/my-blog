@@ -1,7 +1,7 @@
 ---
 // Top navigation — magazine-style underline animation.
 // Active page gets a permanent underline; hover shows it on others.
-// Pure CSS ::after pseudo-element, zero JavaScript for nav behavior.
+// Dropdowns support hover (desktop) AND click/keyboard (touch + a11y).
 import { t, type Locale } from '../i18n/ui';
 
 export interface Props {
@@ -11,10 +11,11 @@ export interface Props {
 
 const { currentPath, locale } = Astro.props;
 
-const altLocale: Locale = locale === 'zh' ? 'en' : 'zh';
-const altPath = locale === 'zh'
-  ? `/en${currentPath ?? ''}`
-  : (currentPath ?? '').replace(/^\/en/, '') || '/';
+// Language links — equivalent path in the other locale
+const zhPath = locale === 'zh'
+  ? (currentPath ?? '/')
+  : ((currentPath ?? '/en/').replace(/^\/en/, '') || '/');
+const enPath = zhPath === '/' ? '/en/' : `/en${zhPath}`;
 
 const isHome = currentPath === '/' || currentPath === '/en/';
 const isWriting = currentPath?.startsWith('/posts') || currentPath?.startsWith('/en/posts');
@@ -25,24 +26,28 @@ const linkCls = (active: boolean) =>
     'nav-link relative pb-1 text-sm font-medium no-underline transition-colors duration-200',
     active
       ? 'active text-neutral-900 dark:text-neutral-100'
-      : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200',
+      : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200',
   ].join(' ');
 ---
 
-<nav class="flex items-center gap-6">
+<nav class="flex items-center gap-6" aria-label={t(locale, 'nav.main')}>
   <!-- Home -->
   <a href={locale === 'zh' ? '/' : '/en/'} class={linkCls(isHome)}>
     {t(locale, 'nav.home')}
   </a>
 
   <!-- Writing dropdown -->
-  <div class="relative group">
-    <span
+  <div class="relative group" id="writing-group">
+    <button
+      type="button"
+      id="writing-trigger"
+      aria-expanded="false"
+      aria-controls="writing-dropdown"
       class:list={[
-        'nav-link relative pb-1 inline-flex items-center gap-1 text-sm font-medium transition-colors duration-200 cursor-default select-none',
+        'nav-link relative pb-1 inline-flex items-center gap-1 text-sm font-medium transition-colors duration-200 cursor-pointer select-none bg-transparent border-none',
         isWriting
           ? 'active text-neutral-900 dark:text-neutral-100'
-          : 'text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200',
+          : 'text-neutral-600 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-200 hover:text-neutral-900 dark:hover:text-neutral-200',
       ]}
     >
       {t(locale, 'nav.writing')}
@@ -52,9 +57,10 @@ const linkCls = (active: boolean) =>
       >
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
       </svg>
-    </span>
+    </button>
 
     <div
+      id="writing-dropdown"
       class="absolute top-full right-0 pt-2
              invisible opacity-0
              group-hover:visible group-hover:opacity-100
@@ -68,8 +74,8 @@ const linkCls = (active: boolean) =>
       >
         <a
           href={locale === 'zh' ? '/' : '/en/'}
-          class="block px-4 py-2 text-sm text-neutral-600 no-underline
-                 hover:text-neutral-900 hover:bg-neutral-50
+          class="block px-4 py-2 text-sm text-neutral-700 no-underline
+                 hover:text-neutral-900 hover:bg-neutral-100
                  dark:text-neutral-400 dark:hover:text-neutral-100 dark:hover:bg-neutral-700/50
                  transition-colors duration-150"
         >
@@ -77,8 +83,8 @@ const linkCls = (active: boolean) =>
         </a>
         <a
           href={locale === 'zh' ? '/archive' : '/en/archive'}
-          class="block px-4 py-2 text-sm text-neutral-600 no-underline
-                 hover:text-neutral-900 hover:bg-neutral-50
+          class="block px-4 py-2 text-sm text-neutral-700 no-underline
+                 hover:text-neutral-900 hover:bg-neutral-100
                  dark:text-neutral-400 dark:hover:text-neutral-100 dark:hover:bg-neutral-700/50
                  transition-colors duration-150"
         >
@@ -100,24 +106,27 @@ const linkCls = (active: boolean) =>
 
   <!-- Subscribe dropdown -->
   <div class="relative" id="subscribe-group">
-    <span
+    <button
+      type="button"
       id="subscribe-trigger"
-      class="nav-link relative pb-1 inline-flex items-center gap-1 text-sm font-medium transition-colors duration-200 cursor-pointer select-none text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
+      aria-expanded="false"
+      aria-controls="subscribe-dropdown"
+      class="nav-link relative pb-1 inline-flex items-center gap-1 text-sm font-medium transition-colors duration-200 cursor-pointer select-none bg-transparent border-none text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200"
     >
       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
       </svg>
       {t(locale, 'newsletter.title')}
-    </span>
+    </button>
 
     <div id="subscribe-dropdown"
       class="absolute top-full right-0 pt-2 invisible opacity-0 transition-all duration-200 z-50">
       <div class="bg-white/90 dark:bg-neutral-800/80 backdrop-blur-xl border border-white/20 dark:border-neutral-700/30 rounded-xl shadow-[0_0_0_1px_rgba(0,0,0,0.03),0_8px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_8px_24px_rgba(0,0,0,0.35)] p-4 min-w-[260px]">
         <p class="text-sm font-medium text-neutral-800 dark:text-neutral-200 mb-1">{t(locale, 'newsletter.title')}</p>
-        <p class="text-xs text-neutral-600 dark:text-neutral-400 mb-3">{t(locale, 'newsletter.text')}</p>
-        <form class="flex gap-2" onsubmit="(function(e){e.preventDefault();var t=e.target.querySelector('input');if(t&&t.value){alert('订阅功能即将上线！');t.value='';}})(event)">
-          <input type="email" placeholder={t(locale, 'newsletter.placeholder')}
-            class="flex-1 px-3 py-1.5 text-xs rounded-lg bg-neutral-50 dark:bg-neutral-700/40 border border-neutral-200/60 dark:border-neutral-600/40 text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"/>
+        <p class="text-xs text-neutral-700 dark:text-neutral-400 mb-3">{t(locale, 'newsletter.text')}</p>
+        <form id="subscribe-form" data-msg={t(locale, 'newsletter.coming_soon')} class="flex gap-2">
+          <input type="email" name="email" placeholder={t(locale, 'newsletter.placeholder')}
+            class="flex-1 px-3 py-1.5 text-xs rounded-lg bg-white/90 dark:bg-neutral-700/40 border border-neutral-300/70 dark:border-neutral-600/40 text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-500 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500 transition-colors"/>
           <button type="submit"
             class="px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-400 transition-colors cursor-pointer border-none shrink-0">
             {t(locale, 'newsletter.button')}
@@ -133,7 +142,9 @@ const linkCls = (active: boolean) =>
   <!-- Theme toggle -->
   <button
     id="theme-toggle"
-    class="p-1 text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 rounded transition-colors duration-200 cursor-pointer bg-transparent border-none"
+    data-label-light={t(locale, 'theme.light')}
+    data-label-dark={t(locale, 'theme.dark')}
+    class="p-1 text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200 rounded transition-colors duration-200 cursor-pointer bg-transparent border-none"
     aria-label={t(locale, 'theme.light')}
     title={t(locale, 'theme.light')}
   >
@@ -146,47 +157,122 @@ const linkCls = (active: boolean) =>
     </svg>
   </button>
 
-  <!-- Language toggle -->
-  <a
-    href={altPath}
-    class="text-xs font-mono font-medium text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors duration-200 no-underline"
-    title={`Switch to ${altLocale === 'zh' ? '中文' : 'English'}`}
-  >
-    {altLocale === 'en' ? 'EN' : '中文'}
-  </a>
+  <!-- Language dropdown -->
+  <div class="relative" id="lang-group">
+    <button
+      type="button"
+      id="lang-trigger"
+      aria-expanded="false"
+      aria-controls="lang-dropdown"
+      aria-label={t(locale, 'lang.switch')}
+      title={t(locale, 'lang.switch')}
+      class="inline-flex items-center gap-0.5 px-1.5 py-1 rounded-md text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors duration-200 cursor-pointer bg-transparent border-none"
+    >
+      <span class="text-sm font-semibold leading-none" aria-hidden="true">文</span>
+      <span class="text-xs font-bold leading-none" aria-hidden="true">A</span>
+      <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+      </svg>
+    </button>
+
+    <div id="lang-dropdown"
+      class="absolute top-full right-0 pt-2 invisible opacity-0 transition-all duration-200 z-50">
+      <div class="bg-white/90 dark:bg-neutral-800/80 backdrop-blur-xl border border-white/20 dark:border-neutral-700/30 rounded-xl shadow-[0_0_0_1px_rgba(0,0,0,0.03),0_8px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_0_0_1px_rgba(255,255,255,0.02),0_8px_24px_rgba(0,0,0,0.35)] p-1 min-w-[140px]">
+        <a
+          href={zhPath}
+          class:list={[
+            'flex items-center justify-between gap-3 px-3 py-1.5 text-sm rounded-lg no-underline transition-colors duration-150',
+            locale === 'zh'
+              ? 'text-neutral-900 dark:text-neutral-100 bg-neutral-100 dark:bg-neutral-700/50 font-semibold'
+              : 'text-neutral-700 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-700/50',
+          ]}
+          aria-current={locale === 'zh' ? 'true' : undefined}
+        >
+          简体中文
+          {locale === 'zh' && (
+            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+          )}
+        </a>
+        <a
+          href={enPath}
+          class:list={[
+            'flex items-center justify-between gap-3 px-3 py-1.5 text-sm rounded-lg no-underline transition-colors duration-150',
+            locale === 'en'
+              ? 'text-neutral-900 dark:text-neutral-100 bg-neutral-100 dark:bg-neutral-700/50 font-semibold'
+              : 'text-neutral-700 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-700/50',
+          ]}
+          aria-current={locale === 'en' ? 'true' : undefined}
+        >
+          English
+          {locale === 'en' && (
+            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+          )}
+        </a>
+      </div>
+    </div>
+  </div>
 </nav>
 
 <script>
-  // Theme toggle
-  document.getElementById('theme-toggle')?.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  });
-
-  // Subscribe dropdown (click-toggle, closes on outside click)
-  (function() {
-    const trigger = document.getElementById('subscribe-trigger');
-    const dropdown = document.getElementById('subscribe-dropdown');
+  // Click-toggle dropdowns with keyboard + outside-click support.
+  // The "Writing" menu also opens on hover (CSS group-hover) for pointer users.
+  function initDropdown(triggerId: string, dropdownId: string, groupId: string) {
+    const trigger = document.getElementById(triggerId);
+    const dropdown = document.getElementById(dropdownId);
+    const group = document.getElementById(groupId);
     if (!trigger || !dropdown) return;
-    let open = false;
 
-    trigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      open = !open;
+    const setOpen = (open: boolean) => {
+      trigger.setAttribute('aria-expanded', String(open));
       dropdown.classList.toggle('invisible', !open);
       dropdown.classList.toggle('opacity-0', !open);
       dropdown.classList.toggle('opacity-100', open);
-      trigger.classList.toggle('active', open);
+    };
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setOpen(trigger.getAttribute('aria-expanded') !== 'true');
+    });
+
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key === 'Esc') setOpen(false);
     });
 
     document.addEventListener('click', (e) => {
-      const group = document.getElementById('subscribe-group');
-      if (group && !group.contains(e.target as Node)) {
-        open = false;
-        dropdown.classList.add('invisible', 'opacity-0');
-        dropdown.classList.remove('opacity-100');
-        trigger.classList.remove('active');
-      }
+      if (group && !group.contains(e.target as Node)) setOpen(false);
     });
-  })();
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key === 'Esc') setOpen(false);
+    });
+  }
+
+  initDropdown('writing-trigger', 'writing-dropdown', 'writing-group');
+  initDropdown('subscribe-trigger', 'subscribe-dropdown', 'subscribe-group');
+  initDropdown('lang-trigger', 'lang-dropdown', 'lang-group');
+
+  // Theme toggle (label points at the action the next click performs)
+  const themeToggle = document.getElementById('theme-toggle');
+  themeToggle?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    const label = isDark ? themeToggle.dataset.labelLight : themeToggle.dataset.labelDark;
+    themeToggle.setAttribute('aria-label', label ?? '');
+    themeToggle.setAttribute('title', label ?? '');
+  });
+
+  // Subscribe form
+  document.getElementById('subscribe-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    const input = form.querySelector('input');
+    if (input && input.value) {
+      alert(form.dataset.msg || 'Coming soon');
+      input.value = '';
+    }
+  });
 </script>

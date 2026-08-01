@@ -9,28 +9,28 @@ export interface Props {
 const { allTags, placeholder, locale } = Astro.props;
 ---
 
-<div id="search-root" class="mb-10">
+<div id="search-inline" class="mb-10">
   <div class="flex gap-2.5">
     <div class="relative flex-1">
-      <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500 dark:text-neutral-400 pointer-events-none"
+      <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 dark:text-neutral-400 pointer-events-none"
            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
       </svg>
       <input id="search-input" type="text" placeholder={placeholder}
         class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl
                bg-white/70 dark:bg-neutral-800/60 backdrop-blur-xl
-               border border-white/20 dark:border-neutral-700/30
+               border border-neutral-200/70 dark:border-neutral-700/30
                text-neutral-800 dark:text-neutral-200
-               placeholder:text-neutral-400 dark:placeholder:text-neutral-500
+               placeholder:text-neutral-500 dark:placeholder:text-neutral-500
                focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500
                transition-colors duration-200"/>
     </div>
     <button id="filter-toggle"
       class="px-4 py-2.5 text-sm font-medium rounded-xl
-             text-neutral-600 dark:text-neutral-300
+             text-neutral-700 dark:text-neutral-300
              bg-white/70 dark:bg-neutral-800/60 backdrop-blur-xl
-             border border-white/20 dark:border-neutral-700/30
-             hover:text-neutral-800 dark:hover:text-neutral-100
+             border border-neutral-200/70 dark:border-neutral-700/30
+             hover:text-neutral-900 dark:hover:text-neutral-100
              hover:border-neutral-300 dark:hover:border-neutral-600
              transition-colors duration-200 cursor-pointer
              flex items-center gap-1.5 shrink-0">
@@ -44,16 +44,16 @@ const { allTags, placeholder, locale } = Astro.props;
   <div id="filter-panel"
     class="hidden mt-3 p-4 rounded-xl
            bg-white/70 dark:bg-neutral-800/60 backdrop-blur-xl
-           border border-white/20 dark:border-neutral-700/30">
+           border border-neutral-200/70 dark:border-neutral-700/30">
     <div class="mb-3">
-      <p class="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2.5">{t(locale, 'search.tags')}</p>
+      <p class="text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-500 mb-2.5">{t(locale, 'search.tags')}</p>
       <div class="flex flex-wrap gap-1.5" id="tag-filters">
         {allTags.map((tag) => (
           <button data-tag={tag}
             class="tag-chip inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full
-                   text-neutral-600 dark:text-neutral-300
-                   bg-neutral-100 dark:bg-neutral-700/50
-                   hover:bg-neutral-200 dark:hover:bg-neutral-600
+                   text-neutral-700 dark:text-neutral-300
+                   bg-neutral-200/70 dark:bg-neutral-700/50
+                   hover:bg-neutral-300 dark:hover:bg-neutral-600
                    transition-colors duration-150 cursor-pointer border-none">
             #{tag}
           </button>
@@ -61,18 +61,18 @@ const { allTags, placeholder, locale } = Astro.props;
       </div>
     </div>
     <div>
-      <p class="text-xs font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2.5">{t(locale, 'search.date')}</p>
+      <p class="text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-neutral-500 mb-2.5">{t(locale, 'search.date')}</p>
       <div class="flex flex-wrap gap-1.5" id="year-filters">
-        <button data-year="" class="year-chip text-xs font-medium px-2 py-0.5 rounded-full text-neutral-600 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-700/50 hover:bg-neutral-200 dark:hover:bg-neutral-600 transition-colors duration-150 cursor-pointer border-none !bg-neutral-900 !text-white dark:!bg-neutral-300 dark:!text-neutral-900">
+        <button data-year="" class="year-chip text-xs font-medium px-2 py-0.5 rounded-full text-neutral-700 dark:text-neutral-300 bg-neutral-200/70 dark:bg-neutral-700/50 hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors duration-150 cursor-pointer border-none !bg-neutral-900 !text-white dark:!bg-neutral-300 dark:!text-neutral-900">
           {t(locale, 'search.all')}
         </button>
       </div>
     </div>
   </div>
-  <p id="results-info" class="mt-3 text-xs text-neutral-500 dark:text-neutral-400 hidden"></p>
+  <p id="results-info" class="mt-3 text-xs text-neutral-600 dark:text-neutral-500 hidden"></p>
 </div>
 
 <script>
   import { initSearch } from '../lib/search.js';
-  initSearch();
+  initSearch('search-inline');
 </script>

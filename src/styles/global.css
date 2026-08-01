@@ -157,7 +157,7 @@ html.dark .code-block-header {
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-neutral-500);
+  color: var(--color-neutral-600);
 }
 
 html.dark .code-block-header .code-lang {
@@ -171,7 +171,7 @@ html.dark .code-block-header .code-lang {
   font-size: 0.6875rem;
   font-weight: 500;
   font-family: var(--font-sans);
-  color: var(--color-neutral-400);
+  color: var(--color-neutral-500);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -208,7 +208,7 @@ html.dark .toc-nav {
   font-size: 0.875rem;    /* text-sm */
   line-height: 1.6;
   padding: 0.25rem 0;     /* py-1 */
-  color: var(--color-neutral-500);
+  color: var(--color-neutral-600);
   text-decoration: none;
   transition: color 0.15s ease, font-weight 0.15s ease;
   border-left: 2px solid transparent;
@@ -221,7 +221,7 @@ html.dark .toc-nav a {
 }
 
 .toc-nav a:hover {
-  color: var(--color-neutral-700);
+  color: var(--color-neutral-900);
 }
 
 html.dark .toc-nav a:hover {

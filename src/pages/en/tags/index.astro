@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { t, type Locale } from '../../../i18n/ui';
+
+const locale: Locale = 'en';
+const posts = (await getCollection('posts')).filter((p) => !p.data.draft);
+
+const tagCounts = new Map<string, number>();
+posts.forEach((p) => (p.data.tags || []).forEach((tag) => tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)));
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+---
+
+<BaseLayout
+  title={`${t(locale, 'tags.index_title')} — ${t(locale, 'site.title')}`}
+  description={t(locale, 'site.description')}
+  currentPath="/en/tags"
+  locale={locale}
+>
+  <h1 class="text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-8">
+    {t(locale, 'tags.index_title')}
+  </h1>
+
+  {
+    tags.length === 0 ? (
+      <p class="text-neutral-600 dark:text-neutral-500">{t(locale, 'tags.empty')}</p>
+    ) : (
+      <div class="flex flex-wrap gap-2.5">
+        {tags.map(([tag, count]) => (
+          <a
+            href={`/en/tags/${tag}`}
+            class="inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1 rounded-full no-underline
+                   text-neutral-700 dark:text-neutral-300
+                   bg-neutral-200/70 dark:bg-neutral-700/50
+                   hover:text-neutral-900 dark:hover:text-neutral-100
+                   hover:bg-neutral-300 dark:hover:bg-neutral-600
+                   transition-colors duration-150"
+          >
+            #{tag}
+            <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400">{count}</span>
+          </a>
+        ))}
+      </div>
+    )
+  }
+</BaseLayout>

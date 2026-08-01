@@ -9,22 +9,20 @@ export const LANG = {
       'site.description':
         'Personal blog — thoughts on technology, design, and building things.',
 
+      'nav.main': 'Main navigation',
       'nav.home': 'Home',
       'nav.writing': 'Writing',
       'nav.all_posts': 'All Posts',
-      'nav.rss_feed': 'RSS Feed',
       'nav.about': 'About',
       'nav.rss': 'RSS',
 
-      'home.greeting': "Hey, I'm",
-      'home.bio':
-        'I write about software engineering, frontend architecture, and the craft of building elegant things on the web. This is my corner of the internet — a quiet place for long-form thinking.',
       'home.writing': 'Writing',
       'home.empty': 'No posts yet. Check back soon.',
 
-      'post.back': 'Back',
-      'post.back_home': 'Back to home',
       'post.read': 'Read',
+      'post.prev': 'Previous',
+      'post.next': 'Next',
+      'post.updated': 'Updated',
 
       'about.title': 'About',
       'about.intro':
@@ -39,17 +37,15 @@ export const LANG = {
       'about.contact_text':
         'The best way to reach me is via <a href="https://github.com">GitHub</a> or <a href="/rss.xml">RSS</a>. I don\'t use social media much, but you might find me lurking on the quiet parts of the internet.',
 
-      'footer.crafted': 'crafted with care',
-      'footer.top': '↑ top',
 
       'archive.title': 'Archive',
       'archive.heading': 'All Posts',
       'tags.title': 'Posts tagged',
       'tags.empty': 'No posts with this tag yet.',
       'tags.all': 'All Tags',
+      'tags.index_title': 'Tags',
 
       'toc.heading': 'On this page',
-      'readtime.min': 'min read',
 
       'copy.link': 'Copy link',
       'copy.copied': 'Copied!',
@@ -60,6 +56,7 @@ export const LANG = {
       'search.date': 'By Year',
       'search.clear': 'Clear',
       'search.filters': 'Filters',
+      'search.filters_open': 'Filters ▲',
       'search.all': 'All',
       'search.no_results': 'No posts found.',
 
@@ -67,11 +64,17 @@ export const LANG = {
       'newsletter.text': 'Get new posts delivered to your inbox. No spam, ever.',
       'newsletter.placeholder': 'your@email.com',
       'newsletter.button': 'Subscribe',
+      'newsletter.coming_soon': 'Subscription will be available soon!',
 
       '404.title': 'Page not found',
       '404.text': 'The page you\'re looking for doesn\'t exist or has been moved.',
       '404.back': 'Back to home',
 
+      'a11y.skip': 'Skip to content',
+      'lightbox.title': 'Image preview',
+      'lightbox.close': 'Close',
+
+      'lang.switch': 'Switch language',
       'theme.light': 'Light',
       'theme.dark': 'Dark',
     },
@@ -80,22 +83,20 @@ export const LANG = {
       'site.title': '~/blog',
       'site.description': '个人博客 — 关于技术、设计与创造的思考。',
 
+      'nav.main': '主导航',
       'nav.home': '首页',
       'nav.writing': '文章',
       'nav.all_posts': '全部文章',
-      'nav.rss_feed': 'RSS 订阅',
       'nav.about': '关于',
       'nav.rss': 'RSS',
 
-      'home.greeting': '你好，我是',
-      'home.bio':
-        '我写关于软件工程、前端架构，以及在 Web 上构建优雅之物的技艺。这里是互联网的一隅 — 一个安静的长文思考空间。',
       'home.writing': '文章',
       'home.empty': '暂无文章，敬请期待。',
 
-      'post.back': '返回',
-      'post.back_home': '返回首页',
       'post.read': '阅读',
+      'post.prev': '上一篇',
+      'post.next': '下一篇',
+      'post.updated': '更新于',
 
       'about.title': '关于',
       'about.intro':
@@ -110,17 +111,15 @@ export const LANG = {
       'about.contact_text':
         '联系我的最佳方式是通过 <a href="https://github.com">GitHub</a> 或 <a href="/rss.xml">RSS</a>。我不太用社交媒体，但你可能会在互联网安静的角落找到我。',
 
-      'footer.crafted': '精心打造',
-      'footer.top': '↑ 顶部',
 
       'archive.title': '归档',
       'archive.heading': '全部文章',
       'tags.title': '标签',
       'tags.empty': '暂无此标签的文章。',
       'tags.all': '全部标签',
+      'tags.index_title': '标签',
 
       'toc.heading': '目录',
-      'readtime.min': '分钟阅读',
 
       'copy.link': '复制链接',
       'copy.copied': '已复制！',
@@ -131,6 +130,7 @@ export const LANG = {
       'search.date': '按年份',
       'search.clear': '清除',
       'search.filters': '筛选',
+      'search.filters_open': '筛选 ▲',
       'search.all': '全部',
       'search.no_results': '未找到匹配文章。',
 
@@ -138,11 +138,17 @@ export const LANG = {
       'newsletter.text': '新文章直接发送到你的邮箱，不打扰。',
       'newsletter.placeholder': '你的邮箱',
       'newsletter.button': '订阅',
+      'newsletter.coming_soon': '订阅功能即将上线！',
 
       '404.title': '页面不存在',
       '404.text': '你访问的页面不存在或已被移动。',
       '404.back': '返回首页',
 
+      'a11y.skip': '跳到正文',
+      'lightbox.title': '图片预览',
+      'lightbox.close': '关闭',
+
+      'lang.switch': '切换语言',
       'theme.light': '浅色',
       'theme.dark': '深色',
     },

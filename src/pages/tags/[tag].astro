@@ -24,15 +24,15 @@ const posts = (await getCollection('posts'))
   locale={locale}
 >
   <h1 class="text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-4">
-    {t(locale, 'tags.title')}: <span class="text-neutral-500 dark:text-neutral-400">#{tag}</span>
+    {t(locale, 'tags.title')}: <span class="text-neutral-600 dark:text-neutral-500">#{tag}</span>
   </h1>
   <div class="mb-10">
-    <a href="/tags" class="text-sm text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors no-underline">&larr; {t(locale, 'tags.all')}</a>
+    <a href="/tags" class="text-sm text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors no-underline">&larr; {t(locale, 'tags.all')}</a>
   </div>
 
   {
     posts.length === 0
-      ? <p class="text-neutral-500 dark:text-neutral-400">{t(locale, 'tags.empty')}</p>
+      ? <p class="text-neutral-600 dark:text-neutral-500">{t(locale, 'tags.empty')}</p>
       : <div>{posts.map((p) => <PostCard post={p} locale={locale} />)}</div>
   }
 </BaseLayout>

@@ -1,15 +1,21 @@
-export function initSearch() {
-  const input = document.getElementById('search-input');
-  if (!input) return;
+// Instance-safe search initializer.
+// Each search widget renders a unique root id and calls initSearch(rootId),
+// so inline + sidebar variants can coexist without duplicate-id collisions.
+export function initSearch(rootId) {
+  const root = document.getElementById(rootId);
+  if (!root) return;
 
+  const input = root.querySelector('#search-input');
   const dataEl = document.getElementById('search-index-data');
-  if (!dataEl) return;
+  if (!input || !dataEl) return;
+
   const posts = JSON.parse(dataEl.textContent || '[]');
 
-  const filterToggle = document.getElementById('filter-toggle');
-  const filterPanel = document.getElementById('filter-panel');
-  const filterLabel = document.getElementById('filter-label');
-  const resultsInfo = document.getElementById('results-info');
+  const filterToggle = root.querySelector('#filter-toggle');
+  const filterPanel = root.querySelector('#filter-panel');
+  const filterLabel = root.querySelector('#filter-label');
+  const resultsInfo = root.querySelector('#results-info');
+  const yearContainer = root.querySelector('#year-filters');
 
   const activeTags = new Set();
   let activeYear = '';
@@ -23,9 +29,8 @@ export function initSearch() {
     postsFound: (n) => htmlLang.startsWith('en') ? `${n} post(s)` : `${n} 篇文章`,
   };
 
-  // Populate year chips from post data
+  // Populate year chips from post data (skip the static "All" chip)
   const years = [...new Set(posts.map((p) => p.publishedAt.slice(0, 4)))].sort().reverse();
-  const yearContainer = document.getElementById('year-filters');
   if (yearContainer) {
     years.forEach((y) => {
       const btn = document.createElement('button');
@@ -44,8 +49,8 @@ export function initSearch() {
     if (filterLabel) filterLabel.textContent = filterOpen ? t.filtersOpen : t.filters;
   });
 
-  // Tag chips
-  document.querySelectorAll('#search-root .tag-chip').forEach((chip) => {
+  // Tag chips — scoped to this widget
+  root.querySelectorAll('.tag-chip').forEach((chip) => {
     chip.addEventListener('click', () => {
       const tag = chip.dataset.tag;
       if (activeTags.has(tag)) {
@@ -59,12 +64,12 @@ export function initSearch() {
     });
   });
 
-  // Year chips
-  document.querySelectorAll('#search-root .year-chip').forEach((chip) => {
+  // Year chips — scoped to this widget
+  root.querySelectorAll('.year-chip').forEach((chip) => {
     chip.addEventListener('click', () => {
       const y = chip.dataset.year || '';
       activeYear = y;
-      document.querySelectorAll('#search-root .year-chip').forEach((c) => {
+      root.querySelectorAll('.year-chip').forEach((c) => {
         c.classList.remove('!bg-neutral-900', '!text-white', 'dark:!bg-neutral-300', 'dark:!text-neutral-900');
       });
       chip.classList.add('!bg-neutral-900', '!text-white', 'dark:!bg-neutral-300', 'dark:!text-neutral-900');
@@ -91,7 +96,7 @@ export function initSearch() {
         match = words.every((w) => haystack.includes(w));
       }
       if (match && activeTags.size > 0) {
-        match = post.tags.some((t) => activeTags.has(t));
+        match = post.tags.some((tag) => activeTags.has(tag));
       }
       if (match && activeYear) {
         match = post.publishedAt.slice(0, 4) === activeYear;

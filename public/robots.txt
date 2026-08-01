@@ -1,0 +1,5 @@
+# TODO: 部署前将下方 Sitemap 域名替换为实际域名（与 src/site.config.ts 保持一致）
+User-agent: *
+Allow: /
+
+Sitemap: https://example.com/sitemap-index.xml

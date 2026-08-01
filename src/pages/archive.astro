@@ -20,11 +20,11 @@ posts.forEach((p) => {
   <h1 class="text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-12">{t(locale, 'archive.heading')}</h1>
   {Object.entries(byYear).reverse().map(([year, items]) => (
     <section class="mb-12">
-      <h2 class="text-sm font-semibold text-neutral-500 dark:text-neutral-400 mb-5">{year}</h2>
+      <h2 class="text-sm font-semibold text-neutral-600 dark:text-neutral-500 mb-5">{year}</h2>
       <div class="space-y-4">
         {items.map((p) => (
           <a href={`/posts/${p.id}`} class="flex items-baseline gap-4 group no-underline">
-            <time class="text-xs text-neutral-500 dark:text-neutral-400 font-mono shrink-0 w-[100px]" datetime={toISODate(p.data.publishedAt)}>
+            <time class="text-xs text-neutral-600 dark:text-neutral-500 font-mono shrink-0 w-[100px]" datetime={toISODate(p.data.publishedAt)}>
               {formatDate(p.data.publishedAt, 'zh', 'short')}
             </time>
             <span class="text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors">{p.data.title}</span>

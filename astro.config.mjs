@@ -2,10 +2,12 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import { SITE } from './src/site.config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com', // TODO: replace with your actual domain
+  site: SITE.url,
+
   devToolbar: { enabled: false },
 
   integrations: [sitemap()],
